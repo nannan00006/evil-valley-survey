@@ -114,6 +114,7 @@
             margin-top: 18px;
         }
 
+        /* 你的小玩意们的容器 */
         .floating-elements {
             position: absolute;
             inset: 0;
@@ -123,16 +124,50 @@
 
         .floating-element {
             position: absolute;
-            opacity: 0.7;
+            opacity: 0.8;
             font-size: 2rem;
-            filter: drop-shadow(0 0 5px rgba(255, 0, 51, 0.7));
+            filter: drop-shadow(0 0 6px rgba(255, 0, 51, 0.7));
         }
 
-        .glasses { top: 8%; left: 6%; animation: float 8s ease-in-out infinite; }
-        .cherry  { top: 18%; right: 8%; animation: float 7s ease-in-out infinite 1s; color: var(--blood-red); }
-        .earring { bottom: 12%; left: 12%; animation: float 9s ease-in-out infinite 0.5s; color: var(--accent-purple); }
-        .basketball { bottom: 22%; right: 6%; animation: float 10s ease-in-out infinite 1.4s; color: #ff8c00; }
-        .ghost   { top: 45%; left: 10%; animation: float 11s ease-in-out infinite 2s; color: #ccc; }
+        /* 眼镜 */
+        .glasses {
+            top: 8%;
+            left: 6%;
+            animation: float 8s ease-in-out infinite;
+            color: #ffffff;
+        }
+
+        /* 樱桃：用 emoji，更像真的🍒 */
+        .cherry {
+            top: 20%;
+            right: 9%;
+            animation: float 7s ease-in-out infinite 0.8s;
+            color: var(--blood-red);
+        }
+
+        /* 十字架耳钉 A：冷白紫色 */
+        .earring-a {
+            bottom: 18%;
+            left: 15%;
+            animation: float 9s ease-in-out infinite 0.3s;
+            color: var(--accent-purple);
+        }
+
+        /* 十字架耳钉 B：偏红，AB 款 */
+        .earring-b {
+            bottom: 12%;
+            left: 23%;
+            animation: float 10s ease-in-out infinite 1s;
+            color: var(--accent-red);
+        }
+
+        /* 篮球 */
+        .basketball {
+            bottom: 22%;
+            right: 6%;
+            animation: float 11s ease-in-out infinite 1.5s;
+            color: #ff8c00;
+        }
 
         @keyframes float {
             0%   { transform: translateY(0) rotate(0deg); }
@@ -441,7 +476,7 @@
         <p class="subtitle">暗黑世界的灵魂小测 · 你到底有多入谷？</p>
 
         <div class="floating-elements">
-            <!-- JS 动态插入图标 -->
+            <!-- JS 动态插入：眼镜 / 樱桃 / 耳钉AB / 篮球 -->
         </div>
     </header>
 
@@ -491,17 +526,26 @@
         }
     }
 
-    // ===== 浮动元素图标 =====
-    const floatingElements = [
-        { class: 'glasses',    icon: 'fa-glasses',          size: '38px' },
-        { class: 'cherry',     icon: 'fa-heart-crack',      size: '30px' },
-        { class: 'earring',    icon: 'fa-gem',              size: '34px' },
-        { class: 'basketball', icon: 'fa-basketball-ball',  size: '40px' },
-        { class: 'ghost',      icon: 'fa-ghost',            size: '32px' }
-    ];
+// 全部改成文字 / emoji，小玩意必显示版
+const floatingElements = [
+    // 眼镜
+    { class: 'glasses',   type: 'text', text: '👓', size: '40px' },
 
-    // ===== 问卷问题 & 阵营得分设定 =====
-    // characterKey 约定：zhangqiang / lintao / meanwei / cha / lihua
+    // 樱桃
+    { class: 'cherry',    type: 'text', text: '🍒', size: '34px' },
+
+    // 十字架耳钉 A
+    { class: 'earring-a', type: 'text', text: '✝',  size: '30px' },
+
+    // 十字架耳钉 B（稍微斜一点，当 AB 款）
+    { class: 'earring-b', type: 'text', text: '✝',  size: '26px', rotate: '-25deg' },
+
+    // 篮球
+    { class: 'basketball',type: 'text', text: '🏀', size: '42px' }
+];
+
+
+    // ===== 问卷问题 & 阵营设定 =====
     const questions = [
         {
             id: 1,
@@ -518,10 +562,10 @@
             id: 2,
             text: "小cha的感情走向，最符合你心里的“官配认知”？",
             options: [
-                { text: "阴湿男鬼林涛",  character: "lintao" },
-                { text: "吊毛李华",      character: "lihua" },
-                { text: "掌控哥张强",    character: "zhangqiang" },
-                { text: "all in（我全都要）", character: "cha-all" }
+                { text: "阴湿男鬼林涛",        character: "lintao" },
+                { text: "吊毛李华",            character: "lihua" },
+                { text: "掌控哥张强",          character: "zhangqiang" },
+                { text: "all in（我全都要）",   character: "cha-all" }
             ],
             correctAnswer: "all in（我全都要）"
         },
@@ -549,37 +593,36 @@
         }
     ];
 
-    // 阵营说明
     const characterProfiles = {
         zhangqiang: {
             name: "掌控哥 · 张强阵营",
             badge: "控制欲担当",
-            desc: "你对时间线和局面的敏感度极高，习惯站在棋盘上方俯视一切。感情对你来说既是筹码，也是底线。",
+            desc: "你对时间线和局面的敏感度极高，习惯站在棋盘上方俯视一切。感情对你来说既是筹码，也是底线。"
         },
         lintao: {
             name: "阴湿男鬼 · 林涛阵营",
             badge: "执念系偏执狂",
-            desc: "你对细节与气氛异常敏锐，擅长在阴影里观察人心。你相信，真正的杀伤力从来不是刀，而是“如果当时”。",
+            desc: "你对细节与气氛异常敏锐，擅长在阴影里观察人心。你相信，真正的杀伤力从来不是刀，而是“如果当时”。"
         },
         meanwei: {
             name: "花孔雀 · mean伟阵营",
             badge: "社交场老狐狸",
-            desc: "你擅长在聚光灯下保持优雅，台词犀利又好笑。你知道每一次回眸都是武器，也知道什么时候该转身离场。",
+            desc: "你擅长在聚光灯下保持优雅，台词犀利又好笑。你知道每一次回眸都是武器，也知道什么时候该转身离场。"
         },
         cha: {
             name: "小cha阵营",
             badge: "剧情核心体",
-            desc: "你对所有人的情绪都很敏感，却又习惯把自己放到最后。你是故事的起点也是终点，是所有抉择的折射镜。",
+            desc: "你对所有人的情绪都很敏感，却又习惯把自己放到最后。你是故事的起点也是终点，是所有抉择的折射镜。"
         },
         lihua: {
             name: "导演 · 李华阵营",
             badge: "剧本掌控者",
-            desc: "你总是在写剧本，也总在改剧本。你擅长把所有人推上舞台，再在暗处记录他们崩溃或重生的瞬间。",
+            desc: "你总是在写剧本，也总在改剧本。你擅长把所有人推上舞台，再在暗处记录他们崩溃或重生的瞬间。"
         },
         neutral: {
             name: "路过观众 · 吃瓜群众",
             badge: "安全区生存者",
-            desc: "你还在安全距离之外看戏，知道里面很疯，但又控制不住多看一眼。说不定哪天，你就走上前排了。",
+            desc: "你还在安全距离之外看戏，知道里面很疯，但又控制不住多看一眼。说不定哪天，你就走上前排了。"
         }
     };
 
@@ -595,27 +638,34 @@
     function init() {
         createParticles();
 
-        // 浮动元素
+        // 插入浮动小玩意
         const floatingContainer = document.querySelector('.floating-elements');
         floatingElements.forEach(element => {
             const el = document.createElement('div');
             el.className = `floating-element ${element.class}`;
-            el.innerHTML = `<i class="fas ${element.icon}"></i>`;
+
+            if (element.type === 'icon') {
+                el.innerHTML = `<i class="fas ${element.icon}"></i>`;
+            } else if (element.type === 'text') {
+                el.textContent = element.text;
+            }
+
             el.style.fontSize = element.size;
+            if (element.rotate) {
+                el.style.transform = `rotate(${element.rotate})`;
+            }
             floatingContainer.appendChild(el);
         });
 
         // 渲染问题
         loadQuestions();
 
-        // 绑定按钮
         document.getElementById('submit-btn').addEventListener('click', submitSurvey);
         document.getElementById('reset-btn').addEventListener('click', resetSurvey);
 
         updateProgress();
     }
 
-    // 渲染问题
     function loadQuestions() {
         const surveyContainer = document.getElementById('survey');
         surveyContainer.innerHTML = '';
@@ -641,14 +691,12 @@
             surveyContainer.appendChild(questionElement);
         });
 
-        // 选项点击更新进度
         const optionLabels = document.querySelectorAll('.option');
         optionLabels.forEach(option => {
             option.addEventListener('click', updateProgress);
         });
     }
 
-    // 统计已答题目数量
     function getAnsweredCount() {
         let answered = 0;
         questions.forEach(q => {
@@ -658,7 +706,6 @@
         return answered;
     }
 
-    // 更新进度条
     function updateProgress() {
         const totalQuestions = questions.length;
         const answered = getAnsweredCount();
@@ -667,12 +714,10 @@
         document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
     }
 
-    // 根据答案找到对应 option 元数据
     function findOptionMeta(question, value) {
         return question.options.find(opt => opt.text === value);
     }
 
-    // 提交问卷
     function submitSurvey() {
         const answered = getAnsweredCount();
         if (answered < questions.length) {
@@ -683,7 +728,6 @@
         const results = [];
         let score = 0;
 
-        // 阵营得分
         const campScores = {
             zhangqiang: 0,
             lintao: 0,
@@ -699,12 +743,10 @@
 
             if (isCorrect) score++;
 
-            // 阵营计分
             if (selectedOption) {
                 const meta = findOptionMeta(question, userAnswer);
                 if (meta) {
                     if (meta.character === 'cha-all') {
-                        // all in：所有 main 角色各 +1
                         campScores.zhangqiang++;
                         campScores.lintao++;
                         campScores.meanwei++;
@@ -727,7 +769,6 @@
         displayResults(results, score, campScores);
     }
 
-    // 计算阵营
     function getCampResult(campScores) {
         let bestKey = 'neutral';
         let bestScore = 0;
@@ -742,7 +783,6 @@
         return { key: bestKey, score: bestScore };
     }
 
-    // 显示结果
     function displayResults(results, score, campScores) {
         const resultsContainer = document.getElementById('results');
         resultsContainer.style.display = 'block';
@@ -805,7 +845,6 @@
         resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // 重置问卷
     function resetSurvey() {
         if (!confirm('确定要重置问卷吗？所有答案和结果都会被清除。')) return;
 
