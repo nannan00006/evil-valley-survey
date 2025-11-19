@@ -4,618 +4,823 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>恶人谷 - 暗黑问卷</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-dOxO9kQvGvjKqJsteVEh9UpAJZxkd06P88eaJEo5gqU7E5Wdl66iRS0LlwM651c01qmPvvrL1jAUx0xCP3k8xw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
         :root {
-            --dark-bg: #0a0a0a;
-            --dark-card: #1a1a1a;
+            --dark-bg: #050509;
+            --dark-card: #15151c;
             --accent-red: #ff0033;
             --accent-purple: #8a2be2;
             --text-light: #e0e0e0;
             --text-muted: #888;
             --blood-red: #8b0000;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', sans-serif;
+            font-family: 'Microsoft YaHei', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        
+
         body {
             background-color: var(--dark-bg);
             color: var(--text-light);
             min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 0, 51, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.05) 0%, transparent 20%);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 51, 0.08) 0%, transparent 35%),
+                radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.08) 0%, transparent 35%);
             overflow-x: hidden;
             position: relative;
+            animation: fade-in-body 0.8s ease-out;
         }
-        
+
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(139, 0, 0, 0.12) 0%, transparent 55%),
+                radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.12) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        /* 背景粒子 */
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 6px rgba(255, 0, 51, 0.6);
             pointer-events: none;
             z-index: -1;
+            animation: float-particle 12s linear infinite;
         }
-        
+
+        @keyframes float-particle {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-120vh); opacity: 0; }
+        }
+
+        @keyframes fade-in-body {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px 16px 40px;
         }
-        
+
         header {
             text-align: center;
-            padding: 30px 0;
+            padding: 32px 0 24px;
             position: relative;
-            margin-bottom: 40px;
+            margin-bottom: 24px;
         }
-        
+
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.6rem;
             color: var(--accent-red);
-            text-shadow: 0 0 10px rgba(255, 0, 51, 0.5);
+            text-shadow: 0 0 12px rgba(255, 0, 51, 0.6);
             margin-bottom: 10px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             position: relative;
             display: inline-block;
         }
-        
+
         h1::after {
             content: "";
             position: absolute;
-            bottom: -10px;
-            left: 10%;
-            width: 80%;
+            bottom: -12px;
+            left: 12%;
+            width: 76%;
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
         }
-        
+
         .subtitle {
             color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-top: 15px;
+            font-size: 1.1rem;
+            margin-top: 18px;
         }
-        
+
         .floating-elements {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             pointer-events: none;
             z-index: -1;
         }
-        
+
         .floating-element {
             position: absolute;
             opacity: 0.7;
             font-size: 2rem;
             filter: drop-shadow(0 0 5px rgba(255, 0, 51, 0.7));
         }
-        
-        .glasses {
-            top: 10%;
-            left: 5%;
-            animation: float 8s ease-in-out infinite;
-        }
-        
-        .cherry {
-            top: 20%;
-            right: 10%;
-            animation: float 6s ease-in-out infinite 1s;
-            color: var(--blood-red);
-        }
-        
-        .earring {
-            bottom: 15%;
-            left: 15%;
-            animation: float 7s ease-in-out infinite 0.5s;
-            color: var(--accent-purple);
-        }
-        
-        .basketball {
-            bottom: 25%;
-            right: 5%;
-            animation: float 9s ease-in-out infinite 1.5s;
-            color: #ff8c00;
-        }
-        
-        .cross {
-            top: 40%;
-            left: 8%;
-            animation: float 10s ease-in-out infinite 2s;
-            color: var(--accent-purple);
-        }
-        
+
+        .glasses { top: 8%; left: 6%; animation: float 8s ease-in-out infinite; }
+        .cherry  { top: 18%; right: 8%; animation: float 7s ease-in-out infinite 1s; color: var(--blood-red); }
+        .earring { bottom: 12%; left: 12%; animation: float 9s ease-in-out infinite 0.5s; color: var(--accent-purple); }
+        .basketball { bottom: 22%; right: 6%; animation: float 10s ease-in-out infinite 1.4s; color: #ff8c00; }
+        .ghost   { top: 45%; left: 10%; animation: float 11s ease-in-out infinite 2s; color: #ccc; }
+
         @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+            0%   { transform: translateY(0) rotate(0deg); }
+            50%  { transform: translateY(-18px) rotate(4deg); }
             100% { transform: translateY(0) rotate(0deg); }
         }
-        
-        .survey-container {
-            background-color: var(--dark-card);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .survey-container::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--accent-red), var(--accent-purple));
-        }
-        
-        .question {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-        
-        .question:last-child {
-            border-bottom: none;
-        }
-        
-        .question-number {
-            position: absolute;
-            left: -15px;
-            top: -5px;
-            background: var(--accent-red);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(255, 0, 51, 0.5);
-        }
-        
-        .question-text {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: var(--text-light);
-            margin-left: 25px;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .option {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-        
-        .option:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
-            border-color: rgba(255, 0, 51, 0.3);
-        }
-        
-        .option input {
-            margin-right: 10px;
-            accent-color: var(--accent-red);
-        }
-        
-        .btn {
-            background-color: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn:hover {
-            background-color: #cc0029;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(255, 0, 51, 0.3);
-        }
-        
-        .btn-purple {
-            background-color: var(--accent-purple);
-        }
-        
-        .btn-purple:hover {
-            background-color: #7a1fc2;
-            box-shadow: 0 5px 10px rgba(138, 43, 226, 0.3);
-        }
-        
+
+        .survey-container,
         .results {
             background-color: var(--dark-card);
-            border-radius: 10px;
-            padding: 30px;
-            margin-top: 30px;
-            display: none;
+            border-radius: 14px;
+            padding: 26px 22px 26px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            margin-bottom: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             position: relative;
             overflow: hidden;
+            animation: fade-up 0.5s ease-out;
         }
-        
+
+        .survey-container::before,
         .results::before {
             content: "";
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--accent-purple), var(--accent-red));
+            left: -10%;
+            width: 120%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-purple));
         }
-        
-        .results h2 {
-            color: var(--accent-red);
-            margin-bottom: 20px;
+
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        
-        .result-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 5px;
-            transition: all 0.3s ease;
+
+        .question {
+            margin-bottom: 26px;
+            padding: 20px 4px 18px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+            position: relative;
         }
-        
-        .result-item:hover {
+
+        .question:last-child {
+            border-bottom: none;
+            margin-bottom: 10px;
+        }
+
+        .question-number {
+            position: absolute;
+            left: -14px;
+            top: -6px;
+            background: radial-gradient(circle at 30% 30%, #fff, var(--accent-red));
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 0 12px rgba(255, 0, 51, 0.75);
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            margin-bottom: 14px;
+            color: var(--text-light);
+            margin-left: 28px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 11px 14px;
+            background-color: rgba(255, 255, 255, 0.04);
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            border: 1px solid transparent;
+            font-size: 0.98rem;
+        }
+
+        .option:hover {
+            background-color: rgba(255, 255, 255, 0.1);
             transform: translateX(5px);
+            border-color: rgba(255, 0, 51, 0.35);
         }
-        
+
+        .option input {
+            margin-right: 10px;
+            accent-color: var(--accent-red);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-red), #ff4b6e);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.98rem;
+            letter-spacing: 0.5px;
+            transition: all 0.24s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(255, 0, 51, 0.35);
+            filter: brightness(1.05);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, var(--accent-purple), #b574ff);
+        }
+
+        .results {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .results h2 {
+            color: var(--accent-purple);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .results h2 i {
+            color: var(--accent-red);
+        }
+
+        .result-item {
+            margin-bottom: 14px;
+            padding: 14px 14px 12px;
+            background-color: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            transition: all 0.22s ease;
+        }
+
+        .result-item:hover {
+            transform: translateX(4px);
+        }
+
         .correct {
             border-left: 4px solid #00cc66;
         }
-        
+
         .incorrect {
             border-left: 4px solid var(--accent-red);
         }
-        
+
         .score-display {
             text-align: center;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 22px;
+            padding: 16px 12px;
+            background: radial-gradient(circle at top, rgba(255, 0, 51, 0.13), transparent 55%);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
         }
-        
+
         .score-value {
-            font-size: 2.5rem;
-            font-weight: bold;
+            font-size: 2.4rem;
+            font-weight: 800;
             color: var(--accent-red);
-            text-shadow: 0 0 10px rgba(255, 0, 51, 0.5);
+            text-shadow: 0 0 10px rgba(255, 0, 51, 0.6);
         }
-        
+
+        .tagline {
+            margin-top: 6px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .camp-result {
+            margin-bottom: 18px;
+            padding: 14px 14px 12px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .camp-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .camp-name span.badge {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .evil-quote {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
         .progress-container {
             margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 10px;
-            padding: 15px;
+            padding: 13px 14px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
-        
+
         .progress-bar {
             height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
             overflow: hidden;
         }
-        
+
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--accent-purple), var(--accent-red));
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.4s ease;
         }
-        
+
         .progress-text {
             display: flex;
             justify-content: space-between;
             margin-top: 5px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
         }
-        
+
         .button-container {
             text-align: center;
-            margin: 20px 0;
+            margin: 18px 0 10px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        
+
+        .hint-text {
+            text-align: center;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
         @media (max-width: 768px) {
             h1 {
-                font-size: 2rem;
+                font-size: 2.1rem;
             }
-            
+            header {
+                padding-top: 26px;
+            }
             .survey-container, .results {
-                padding: 20px;
+                padding: 20px 16px 22px;
             }
-            
             .option {
-                padding: 10px 12px;
+                padding: 9px 11px;
             }
-            
             .floating-element {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
         }
-        
+
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .container {
-                padding: 10px;
-            }
-            
-            .survey-container, .results {
-                padding: 15px;
-            }
-            
+            h1 { font-size: 1.8rem; }
+            .container { padding-inline: 10px; }
+            .survey-container, .results { padding: 16px 12px 18px; }
             .question-number {
                 left: -10px;
-                width: 25px;
-                height: 25px;
-                font-size: 0.9rem;
+                width: 26px;
+                height: 26px;
+                font-size: 0.85rem;
             }
-            
-            .question-text {
-                margin-left: 20px;
-            }
+            .question-text { margin-left: 20px; }
+            .button-container { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>恶人谷问卷调查</h1>
-            <p class="subtitle">暗黑世界的灵魂拷问</p>
-            
-            <div class="floating-elements">
-                <!-- 动态元素将在这里通过JavaScript添加 -->
-            </div>
-        </header>
-        
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <div class="progress-text">
-                <span>问卷进度</span>
-                <span id="progress-text">0%</span>
-            </div>
+<div class="container">
+    <header>
+        <h1>恶人谷问卷调查</h1>
+        <p class="subtitle">暗黑世界的灵魂小测 · 你到底有多入谷？</p>
+
+        <div class="floating-elements">
+            <!-- JS 动态插入图标 -->
         </div>
-        
-        <section class="survey-container" id="survey">
-            <!-- 问卷问题将通过JavaScript动态生成 -->
-        </section>
-        
-        <div class="button-container">
-            <button class="btn" id="submit-btn">
-                <i class="fas fa-paper-plane"></i> 提交问卷
-            </button>
-            <button class="btn btn-purple" id="reset-btn">
-                <i class="fas fa-redo"></i> 重置问卷
-            </button>
+    </header>
+
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
         </div>
-        
-        <section class="results" id="results">
-            <h2><i class="fas fa-poll"></i> 问卷结果</h2>
-            <!-- 结果将通过JavaScript动态生成 -->
-        </section>
+        <div class="progress-text">
+            <span><i class="fas fa-list-check"></i> 问卷进度</span>
+            <span id="progress-text">0%</span>
+        </div>
     </div>
 
-    <script>
-        // 动态元素数据
-        const floatingElements = [
-            { class: 'glasses', icon: 'fa-glasses', size: '40px' },
-            { class: 'cherry', icon: 'fa-cherry', size: '30px' },
-            { class: 'earring', icon: 'fa-gem', size: '35px' },
-            { class: 'basketball', icon: 'fa-basketball', size: '45px' },
-            { class: 'cross', icon: 'fa-cross', size: '35px' }
-        ];
-        
-        // 问卷问题数据 - 直接在代码中维护
-        let questions = [
-            {
-                id: 1,
-                text: "张强用什么？",
-                options: ["手机", "私人板框", "披萨小狗", "冷帽"],
-                correctAnswer: "披萨小狗"
-            },
-            {
-                id: 2,
-                text: "小cha喜欢谁？",
-                options: ["阴湿男鬼林涛", "吊毛李华", "掌控哥张强", "all in"],
-                correctAnswer: "all in"
-            },
-            {
-                id: 3,
-                text: "mean伟初吻在哪？",
-                options: ["学校", "还没发生", "租的房子", "沙发"],
-                correctAnswer: "沙发"
-            },
-            {
-                id: 4,
-                text: "李华cha的初吻在哪？",
-                options: ["还没有发生", "密室", "刚见面", "萨瓦迪卡"],
-                correctAnswer: "萨瓦迪卡"
-            }
-        ];
-        
-        // 初始化函数
-        function init() {
-            // 添加动态元素
-            const floatingContainer = document.querySelector('.floating-elements');
-            floatingElements.forEach(element => {
-                const el = document.createElement('div');
-                el.className = `floating-element ${element.class}`;
-                el.innerHTML = `<i class="fas ${element.icon}"></i>`;
-                el.style.fontSize = element.size;
-                floatingContainer.appendChild(el);
-            });
-            
-            // 加载问卷问题
-            loadQuestions();
-            
-            // 添加事件监听器
-            document.getElementById('submit-btn').addEventListener('click', submitSurvey);
-            document.getElementById('reset-btn').addEventListener('click', resetSurvey);
-            
-            // 更新进度条
-            updateProgress();
+    <section class="survey-container" id="survey">
+        <!-- 问题由 JS 动态生成 -->
+    </section>
+
+    <div class="button-container">
+        <button class="btn" id="submit-btn">
+            <i class="fas fa-paper-plane"></i> 提交问卷
+        </button>
+        <button class="btn btn-purple" id="reset-btn">
+            <i class="fas fa-rotate-right"></i> 重置重来
+        </button>
+    </div>
+    <p class="hint-text">* 这是恶人谷世界观内的小测试，仅供快乐入谷，不代表任何现实立场。</p>
+
+    <section class="results" id="results">
+        <h2><i class="fas fa-poll"></i> 问卷结果</h2>
+        <!-- 结果由 JS 动态生成 -->
+    </section>
+</div>
+
+<script>
+    // ===== 背景粒子 =====
+    function createParticles(count = 25) {
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 3 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = (Math.random() * 100 + 20) + 'vh';
+            p.style.animationDelay = (Math.random() * 12) + 's';
+            document.body.appendChild(p);
         }
-        
-        // 加载问题到页面
-        function loadQuestions() {
-            const surveyContainer = document.getElementById('survey');
-            surveyContainer.innerHTML = '';
-            
-            questions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
-                questionElement.innerHTML = `
-                    <div class="question-number">${index + 1}</div>
-                    <div class="question-text">${question.text}</div>
-                    <div class="options">
-                        ${question.options.map(option => `
-                            <label class="option">
-                                <input type="radio" name="question-${question.id}" value="${option}">
-                                ${option}
-                            </label>
-                        `).join('')}
-                    </div>
-                `;
-                surveyContainer.appendChild(questionElement);
-            });
-            
-            // 为每个选项添加点击事件，更新进度
-            const options = document.querySelectorAll('.option');
-            options.forEach(option => {
-                option.addEventListener('click', updateProgress);
-            });
+    }
+
+    // ===== 浮动元素图标 =====
+    const floatingElements = [
+        { class: 'glasses',    icon: 'fa-glasses',          size: '38px' },
+        { class: 'cherry',     icon: 'fa-heart-crack',      size: '30px' },
+        { class: 'earring',    icon: 'fa-gem',              size: '34px' },
+        { class: 'basketball', icon: 'fa-basketball-ball',  size: '40px' },
+        { class: 'ghost',      icon: 'fa-ghost',            size: '32px' }
+    ];
+
+    // ===== 问卷问题 & 阵营得分设定 =====
+    // characterKey 约定：zhangqiang / lintao / meanwei / cha / lihua
+    const questions = [
+        {
+            id: 1,
+            text: "张强出场时，最标志性的东西是？",
+            options: [
+                { text: "手机",         character: "cha" },
+                { text: "私人板框",     character: "meanwei" },
+                { text: "披萨小狗",     character: "zhangqiang" },
+                { text: "冷帽",         character: "lintao" }
+            ],
+            correctAnswer: "披萨小狗"
+        },
+        {
+            id: 2,
+            text: "小cha的感情走向，最符合你心里的“官配认知”？",
+            options: [
+                { text: "阴湿男鬼林涛",  character: "lintao" },
+                { text: "吊毛李华",      character: "lihua" },
+                { text: "掌控哥张强",    character: "zhangqiang" },
+                { text: "all in（我全都要）", character: "cha-all" }
+            ],
+            correctAnswer: "all in（我全都要）"
+        },
+        {
+            id: 3,
+            text: "mean伟的初吻事件里，你第一反应想到的场景是？",
+            options: [
+                { text: "学校",     character: "lintao" },
+                { text: "还没发生", character: "lihua" },
+                { text: "租的房子", character: "cha" },
+                { text: "沙发",     character: "meanwei" }
+            ],
+            correctAnswer: "沙发"
+        },
+        {
+            id: 4,
+            text: "李华与cha那次“萨瓦迪卡”名场面，你的记忆是？",
+            options: [
+                { text: "还没有发生", character: "zhangqiang" },
+                { text: "密室",       character: "lintao" },
+                { text: "刚见面",     character: "meanwei" },
+                { text: "萨瓦迪卡",   character: "lihua" }
+            ],
+            correctAnswer: "萨瓦迪卡"
         }
-        
-        // 更新进度条
-        function updateProgress() {
-            const totalQuestions = questions.length;
-            let answered = 0;
-            
-            questions.forEach(question => {
-                const selectedOption = document.querySelector(`input[name="question-${question.id}"]:checked`);
-                if (selectedOption) answered++;
-            });
-            
-            const progress = totalQuestions > 0 ? (answered / totalQuestions) * 100 : 0;
-            document.getElementById('progress-fill').style.width = `${progress}%`;
-            document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
+    ];
+
+    // 阵营说明
+    const characterProfiles = {
+        zhangqiang: {
+            name: "掌控哥 · 张强阵营",
+            badge: "控制欲担当",
+            desc: "你对时间线和局面的敏感度极高，习惯站在棋盘上方俯视一切。感情对你来说既是筹码，也是底线。",
+        },
+        lintao: {
+            name: "阴湿男鬼 · 林涛阵营",
+            badge: "执念系偏执狂",
+            desc: "你对细节与气氛异常敏锐，擅长在阴影里观察人心。你相信，真正的杀伤力从来不是刀，而是“如果当时”。",
+        },
+        meanwei: {
+            name: "花孔雀 · mean伟阵营",
+            badge: "社交场老狐狸",
+            desc: "你擅长在聚光灯下保持优雅，台词犀利又好笑。你知道每一次回眸都是武器，也知道什么时候该转身离场。",
+        },
+        cha: {
+            name: "小cha阵营",
+            badge: "剧情核心体",
+            desc: "你对所有人的情绪都很敏感，却又习惯把自己放到最后。你是故事的起点也是终点，是所有抉择的折射镜。",
+        },
+        lihua: {
+            name: "导演 · 李华阵营",
+            badge: "剧本掌控者",
+            desc: "你总是在写剧本，也总在改剧本。你擅长把所有人推上舞台，再在暗处记录他们崩溃或重生的瞬间。",
+        },
+        neutral: {
+            name: "路过观众 · 吃瓜群众",
+            badge: "安全区生存者",
+            desc: "你还在安全距离之外看戏，知道里面很疯，但又控制不住多看一眼。说不定哪天，你就走上前排了。",
         }
-        
-        // 提交问卷
-        function submitSurvey() {
-            const results = [];
-            let score = 0;
-            
-            questions.forEach(question => {
-                const selectedOption = document.querySelector(`input[name="question-${question.id}"]:checked`);
-                const userAnswer = selectedOption ? selectedOption.value : '未回答';
-                const isCorrect = userAnswer === question.correctAnswer;
-                
-                if (isCorrect) score++;
-                
-                results.push({
-                    question: question.text,
-                    userAnswer: userAnswer,
-                    correctAnswer: question.correctAnswer,
-                    isCorrect: isCorrect
-                });
-            });
-            
-            // 显示结果
-            displayResults(results, score);
-        }
-        
-        // 显示结果
-        function displayResults(results, score) {
-            const resultsContainer = document.getElementById('results');
-            resultsContainer.style.display = 'block';
-            
-            let resultsHTML = `
-                <div class="score-display">
-                    <div>你的得分</div>
-                    <div class="score-value">${score} / ${questions.length}</div>
-                    <div>${score >= questions.length/2 ? '满分同学！毕业!' : '重修！'}</div>
+    };
+
+    const evilQuotes = [
+        "“风起时，请别回头。”",
+        "“你以为你在选择，其实你一直在被选择。”",
+        "“命运落笔无情，可有人偏要拿命改稿。”",
+        "“我们都在演戏，只是有的人拿到了剧本。”",
+        "“有些人死在故事里，有些人死在故事开始之前。”"
+    ];
+
+    // ===== 初始化 =====
+    function init() {
+        createParticles();
+
+        // 浮动元素
+        const floatingContainer = document.querySelector('.floating-elements');
+        floatingElements.forEach(element => {
+            const el = document.createElement('div');
+            el.className = `floating-element ${element.class}`;
+            el.innerHTML = `<i class="fas ${element.icon}"></i>`;
+            el.style.fontSize = element.size;
+            floatingContainer.appendChild(el);
+        });
+
+        // 渲染问题
+        loadQuestions();
+
+        // 绑定按钮
+        document.getElementById('submit-btn').addEventListener('click', submitSurvey);
+        document.getElementById('reset-btn').addEventListener('click', resetSurvey);
+
+        updateProgress();
+    }
+
+    // 渲染问题
+    function loadQuestions() {
+        const surveyContainer = document.getElementById('survey');
+        surveyContainer.innerHTML = '';
+
+        questions.forEach((question, index) => {
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+
+            const optionsHTML = question.options.map(option => `
+                <label class="option">
+                    <input type="radio" name="question-${question.id}" value="${option.text}">
+                    ${option.text}
+                </label>
+            `).join('');
+
+            questionElement.innerHTML = `
+                <div class="question-number">${index + 1}</div>
+                <div class="question-text">${question.text}</div>
+                <div class="options">
+                    ${optionsHTML}
                 </div>
             `;
-            
-            results.forEach((result, index) => {
-                resultsHTML += `
-                    <div class="result-item ${result.isCorrect ? 'correct' : 'incorrect'}">
-                        <div class="question-text">${index + 1}. ${result.question}</div>
-                        <div>你的答案: ${result.userAnswer}</div>
-                        <div>正确答案: ${result.correctAnswer}</div>
-                        <div style="margin-top: 5px; color: ${result.isCorrect ? '#00cc66' : '#ff0033'}">
-                            <i class="fas ${result.isCorrect ? 'fa-check' : 'fa-times'}"></i>
-                            ${result.isCorrect ? ' 正确' : ' 错误'}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            resultsContainer.innerHTML = resultsHTML;
-            
-            // 滚动到结果区域
-            resultsContainer.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // 重置问卷
-        function resetSurvey() {
-            if (confirm('确定要重置问卷吗？所有答案将被清除。')) {
-                const radioButtons = document.querySelectorAll('input[type="radio"]');
-                radioButtons.forEach(radio => {
-                    radio.checked = false;
-                });
-                
-                const resultsContainer = document.getElementById('results');
-                resultsContainer.style.display = 'none';
-                
-                updateProgress();
-            }
-        }
-        
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
+            surveyContainer.appendChild(questionElement);
+        });
 
+        // 选项点击更新进度
+        const optionLabels = document.querySelectorAll('.option');
+        optionLabels.forEach(option => {
+            option.addEventListener('click', updateProgress);
+        });
+    }
+
+    // 统计已答题目数量
+    function getAnsweredCount() {
+        let answered = 0;
+        questions.forEach(q => {
+            const selected = document.querySelector(`input[name="question-${q.id}"]:checked`);
+            if (selected) answered++;
+        });
+        return answered;
+    }
+
+    // 更新进度条
+    function updateProgress() {
+        const totalQuestions = questions.length;
+        const answered = getAnsweredCount();
+        const progress = totalQuestions > 0 ? (answered / totalQuestions) * 100 : 0;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+        document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
+    }
+
+    // 根据答案找到对应 option 元数据
+    function findOptionMeta(question, value) {
+        return question.options.find(opt => opt.text === value);
+    }
+
+    // 提交问卷
+    function submitSurvey() {
+        const answered = getAnsweredCount();
+        if (answered < questions.length) {
+            const goOn = confirm(`你还有 ${questions.length - answered} 题没做完，确定要直接交卷吗？`);
+            if (!goOn) return;
+        }
+
+        const results = [];
+        let score = 0;
+
+        // 阵营得分
+        const campScores = {
+            zhangqiang: 0,
+            lintao: 0,
+            meanwei: 0,
+            cha: 0,
+            lihua: 0
+        };
+
+        questions.forEach(question => {
+            const selectedOption = document.querySelector(`input[name="question-${question.id}"]:checked`);
+            const userAnswer = selectedOption ? selectedOption.value : '未回答';
+            const isCorrect = userAnswer === question.correctAnswer;
+
+            if (isCorrect) score++;
+
+            // 阵营计分
+            if (selectedOption) {
+                const meta = findOptionMeta(question, userAnswer);
+                if (meta) {
+                    if (meta.character === 'cha-all') {
+                        // all in：所有 main 角色各 +1
+                        campScores.zhangqiang++;
+                        campScores.lintao++;
+                        campScores.meanwei++;
+                        campScores.cha++;
+                        campScores.lihua++;
+                    } else if (campScores.hasOwnProperty(meta.character)) {
+                        campScores[meta.character]++;
+                    }
+                }
+            }
+
+            results.push({
+                question: question.text,
+                userAnswer,
+                correctAnswer: question.correctAnswer,
+                isCorrect
+            });
+        });
+
+        displayResults(results, score, campScores);
+    }
+
+    // 计算阵营
+    function getCampResult(campScores) {
+        let bestKey = 'neutral';
+        let bestScore = 0;
+
+        Object.entries(campScores).forEach(([key, value]) => {
+            if (value > bestScore) {
+                bestScore = value;
+                bestKey = key;
+            }
+        });
+
+        return { key: bestKey, score: bestScore };
+    }
+
+    // 显示结果
+    function displayResults(results, score, campScores) {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.style.display = 'block';
+
+        const total = questions.length;
+        let levelText = '';
+        if (score === total) {
+            levelText = '你是恶人谷考古组核心成员，连细节都刻在骨头里。';
+        } else if (score >= total - 1) {
+            levelText = '已经非常入谷，说明你不仅看过，还在反复重温名场面。';
+        } else if (score >= total / 2) {
+            levelText = '合格入谷者，再多刷几遍，你就可以开始纠结时间线了。';
+        } else if (score > 0) {
+            levelText = '你在门口探头，恶人谷还没完全张嘴咬住你。现在回头还来得及。大概。';
+        } else {
+            levelText = '你是纯爱战士/路过群众，只是被朋友硬拉进来做了一份卷。';
+        }
+
+        const campResult = getCampResult(campScores);
+        const campProfile = characterProfiles[campResult.key] || characterProfiles.neutral;
+        const randomQuote = evilQuotes[Math.floor(Math.random() * evilQuotes.length)];
+
+        let html = `
+            <div class="score-display">
+                <div>你的得分</div>
+                <div class="score-value">${score} / ${total}</div>
+                <div class="tagline">${levelText}</div>
+            </div>
+
+            <div class="camp-result">
+                <div class="camp-name">
+                    <i class="fas fa-mask"></i>
+                    <span>${campProfile.name}</span>
+                    <span class="badge">${campProfile.badge}</span>
+                </div>
+                <div style="font-size:0.95rem; line-height:1.5; margin-top:4px;">
+                    ${campProfile.desc}
+                </div>
+                <div class="evil-quote">${randomQuote}</div>
+            </div>
+        `;
+
+        results.forEach((result, index) => {
+            html += `
+                <div class="result-item ${result.isCorrect ? 'correct' : 'incorrect'}">
+                    <div class="question-text" style="margin-left:0; font-size:1rem;">
+                        ${index + 1}. ${result.question}
+                    </div>
+                    <div style="margin-top:6px;">你的答案：<strong>${result.userAnswer}</strong></div>
+                    <div>正确答案：<strong>${result.correctAnswer}</strong></div>
+                    <div style="margin-top: 5px; color: ${result.isCorrect ? '#00cc66' : '#ff0033'}">
+                        <i class="fas ${result.isCorrect ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                        ${result.isCorrect ? ' 正确' : ' 错误'}
+                    </div>
+                </div>
+            `;
+        });
+
+        resultsContainer.innerHTML = html;
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 重置问卷
+    function resetSurvey() {
+        if (!confirm('确定要重置问卷吗？所有答案和结果都会被清除。')) return;
+
+        const radios = document.querySelectorAll('input[type="radio"]');
+        radios.forEach(r => r.checked = false);
+
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.style.display = 'none';
+        resultsContainer.innerHTML = '<h2><i class="fas fa-poll"></i> 问卷结果</h2>';
+
+        updateProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
 </html>
